@@ -60,6 +60,8 @@ RUN php artisan cache:clear && \
     php artisan config:cache && \
     php artisan route:cache && \
     php artisan key:generate && \
+    # php artisan config:cache && \
+    # rm -rf bootstrap/cache/*.php && \
     chmod 777 -R /var/www/html/storage/ && \
     chown -R www-data:www-data /var/www/ && \
     a2enmod rewrite
