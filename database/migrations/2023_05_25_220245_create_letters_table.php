@@ -30,7 +30,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('letter', function(Blueprint $table){
+        Schema::table('letters', function(Blueprint $table){
             $table->dropForeignIdFor(User::class);
         });
 

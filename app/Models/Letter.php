@@ -20,11 +20,17 @@ class Letter extends Model
         'read',
         'recipient_email',
         'user_id',
+        'visibility_id'
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function visibility(): BelongsTo
+    {
+        return $this->BelongsTo(Visibility::class);
     }
 
 }

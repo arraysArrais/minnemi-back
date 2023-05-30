@@ -20,7 +20,8 @@ class LetterSeeder extends Seeder
             'received' => 1,
             'read' => 0,
             'recipient_email' => 'johndoe@loremipsum.com',
-            'user_id' => '1'
+            'user_id' => '1',
+            'visibility_id' => 1
         ]);
     }
 }
