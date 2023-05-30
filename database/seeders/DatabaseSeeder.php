@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             VisibilityTypeSeeder::class,
             LetterSeeder::class,
+            DraftSeeder::class,
         ]);
     }
 }
