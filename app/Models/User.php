@@ -19,9 +19,10 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'nickname',
+        'first_name',
+        'last_name',
+        'profile_picture',
     ];
 
     /**
@@ -30,8 +31,6 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
     ];
 
     /**
@@ -40,12 +39,15 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
     ];
 
     public function letter(): HasMany
     {
         return $this->HasMany(Letter::class);
+    }
+
+    public function draft(): HasMany
+    {
+        return $this->hasMany(Draft::class);
     }
 }

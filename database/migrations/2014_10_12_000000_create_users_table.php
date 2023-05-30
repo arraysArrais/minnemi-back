@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nickname', 45);
             $table->string('first_name', 45);
             $table->string('last_name', 45);
-            $table->string('profile_picture');
+            $table->string('profile_picture')->default('default.png');
             $table->timestamps();
         });
     }
