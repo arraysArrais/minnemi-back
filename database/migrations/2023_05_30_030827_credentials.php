@@ -12,10 +12,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('drafts', function (Blueprint $table) {
+        Schema::create('credentials', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 32);
-            $table->text('content');
+            $table->string('password')->nullable(false);
+            $table->string('email', 45)->unique()->nullable(false);
+            $table->string('google_id', 45);
+            $table->timestamp('email_verified_at')->nullable();
+            $table->rememberToken();
             $table->foreignIdFor(User::class)->references('id')->on('users')->onDelete('CASCADE');
             $table->timestamps();
         });
@@ -26,10 +29,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('drafts', function(Blueprint $table){
+        Schema::table('credentials', function(Blueprint $table){
             $table->dropForeignIdFor(User::class);
         });
 
-        Schema::dropIfExists('drafts');
+        Schema::dropIfExists('credentials');
     }
 };
