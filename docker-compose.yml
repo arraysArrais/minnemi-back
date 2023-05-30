@@ -1,3 +1,4 @@
+#adicionando docker compose
 version: "3"
 services:
   minnemi-back-app:

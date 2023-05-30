@@ -42,5 +42,5 @@ RUN chown -R www-data:www-data storage
 # Habilita o módulo rewrite do Apache
 RUN a2enmod rewrite
 
-# Expõe a porta 80
+# Expõe a porta 80, se necessário mudar
 EXPOSE 80
