@@ -15,8 +15,10 @@ class Letter extends Model
     protected $fillable = [
         'title',
         'content',
-        'visibility',
         'date_to_send',
+        'received',
+        'read',
+        'recipient_email',
         'user_id',
     ];
 
