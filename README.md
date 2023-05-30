@@ -40,8 +40,8 @@ $ cp .env.example .env
 5. Agora verifique se o Docker já está rodando na sua máquina
 6. Vamos iniciar o Docker da aplicação, isso realizará todas as instalações necessárias:
 ```Bash
-$ docker build -t minnemi .
-$ docker run minnemi
+docker-compose build
+docker-compose up -d
 ```
 7. Verifique no navegador se a aplicação está rodando na porta local `80`, use o link:
 ```Bash
