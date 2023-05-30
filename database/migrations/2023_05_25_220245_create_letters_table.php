@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 Use App\Models\User;
-
 return new class extends Migration
 {
     /**
@@ -17,8 +16,10 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('content');
-            $table->string('visibility', 7)->default('private');
             $table->date('date_to_send');
+            $table->integer('received');
+            $table->integer('read');
+            $table->string('recipient_email');
             $table->foreignIdFor(User::class)->references('id')->on('users')->onDelete('CASCADE');
             $table->timestamps();
         });
