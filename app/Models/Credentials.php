@@ -13,6 +13,10 @@ class Credentials extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
 
+    protected $hidden = [
+        'password',
+    ];
+
     protected $fillable = [
         'password',
         'email',
