@@ -22,11 +22,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::middleware(SetLocale::class)->group(function (): void {
-    Route::post('/letter', [LetterController::class, 'create']);
-});
-
-
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
@@ -41,6 +36,6 @@ Route::group([
 });
 
 //protected api routes
-Route::middleware(['auth:api'])->group(function () {
-    
+Route::middleware(['auth:api', SetLocale::class])->group(function () {
+    Route::post('/letter', [LetterController::class, 'create']);
 });
