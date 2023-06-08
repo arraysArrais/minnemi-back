@@ -37,6 +37,7 @@ Route::group([
     Route::post('me', [AuthController::class, 'me']);
     Route::post('verify', [AuthController::class, 'verify']);
     Route::post('revoke', [AuthController::class, 'revokeToken']);
+    Route::post('decode', [AuthController::class, 'getPayload']);
 });
 
 //protected api routes

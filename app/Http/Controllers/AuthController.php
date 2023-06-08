@@ -104,4 +104,10 @@ class AuthController extends Controller
             'msg' => 'Token invalidated'
         ], 200);
     }
+
+    public function getPayload(){
+        $payload = auth()->payload();
+
+        return response()->json($payload, 200);
+    }
 }
