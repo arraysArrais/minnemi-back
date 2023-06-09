@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LetterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::middleware(SetLocale::class)->group(function (): void {
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth'
+], function ($router) {
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::post('me', [AuthController::class, 'me']);
+    Route::post('verify', [AuthController::class, 'verify']);
+    Route::post('revoke', [AuthController::class, 'revokeToken']);
+    Route::post('decode', [AuthController::class, 'getPayload']);
+});
+
+//protected api routes
+Route::middleware(['auth:api', SetLocale::class])->group(function () {
     Route::post('/letter', [LetterController::class, 'create']);
 });

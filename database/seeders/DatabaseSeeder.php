@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             VisibilityTypeSeeder::class,
             LetterSeeder::class,
             DraftSeeder::class,
+            CredentialSeeder::class,
         ]);
     }
 }
