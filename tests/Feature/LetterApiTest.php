@@ -67,4 +67,43 @@ class LetterApiTest extends TestCase
         $response->assertStatus(201);
         $response->assertJsonStructure(['id']);
     }
+
+    public function test_multiple_language_support_on_api_response(): void
+    {
+        $body = [
+            'title' => 'Letter #02',
+            'content' => '1',
+            'date_to_send' => '2099-12-12',
+            'received' => 1,
+            'read' => 0,
+            'recipient_email' => 'johndoe@loremipsum.com',
+            'user_id' => '1',
+            'visibility_id' => 1
+        ];
+
+        $token = $this->getJwtToken();
+
+        $headersPt = [
+            'lang' => 'pt',
+            'Authorization' => 'Bearer ' . $token
+        ];
+
+        $headersEn = [
+            'lang' => 'en',
+            'Authorization' => 'Bearer ' . $token
+        ];
+
+        $responsePt = $this->postJson('/api/letter', $body, $headersPt);
+        $responsePt->assertStatus(422);
+        $responsePt->assertJson([
+            'message' => 'O campo content precisa conter pelo menos 100 caracteres.'
+        ]);
+
+        $responseEn = $this->postJson('/api/letter', $body, $headersEn);
+        $responseEn->assertStatus(422);
+        $responseEn->assertJson([
+            'message' => 'The content field must be at least 100 characters.'
+        ]);
+    }
+
 }
