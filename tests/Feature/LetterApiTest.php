@@ -5,20 +5,10 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Tests\Helpers\TestHelper;
 
 class LetterApiTest extends TestCase
 {
-    protected function getJwtToken(): string
-    {
-        $body = [
-            'email' => 'teste@teste.com',
-            'password' => '123456'
-        ];
-
-        $response = $this->postJson('/api/auth/login', $body);
-
-        return $response['access_token'];
-    }
 
     public function test_create_letter_endpoint_with_no_token_and_return_401_unauthorized(): void
     {
@@ -55,7 +45,7 @@ class LetterApiTest extends TestCase
             'visibility_id' => 1
         ];
 
-        $token = $this->getJwtToken();
+        $token = TestHelper::getJwtToken();
 
         $headers = [
             'lang' => 'pt',
@@ -81,7 +71,7 @@ class LetterApiTest extends TestCase
             'visibility_id' => 1
         ];
 
-        $token = $this->getJwtToken();
+        $token = TestHelper::getJwtToken();
 
         $headersPt = [
             'lang' => 'pt',
