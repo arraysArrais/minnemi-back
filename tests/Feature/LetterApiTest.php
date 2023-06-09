@@ -41,4 +41,30 @@ class LetterApiTest extends TestCase
 
         $response->assertStatus(401);
     }
+
+    public function test_create_letter_endpoint_with_token_and_return_201_created(): void
+    {
+        $body = [
+            'title' => 'Letter #02',
+            'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tempus et est eget convallis. Nullam eu tempor est. Nullam congue nulla eu eros fermentum, dictum varius neque varius. Integer euismod augue sit amet justo aliquet, a dapibus nibh volutpat. Duis sodales, orci sit amet pretium rutrum, leo ligula vestibulum ante',
+            'date_to_send' => '2099-12-12',
+            'received' => 1,
+            'read' => 0,
+            'recipient_email' => 'johndoe@loremipsum.com',
+            'user_id' => '1',
+            'visibility_id' => 1
+        ];
+
+        $token = $this->getJwtToken();
+
+        $headers = [
+            'lang' => 'pt',
+            'Authorization' => 'Bearer ' . $token
+        ];
+
+        $response = $this->postJson('/api/letter', $body, $headers);
+
+        $response->assertStatus(201);
+        $response->assertJsonStructure(['id']);
+    }
 }
