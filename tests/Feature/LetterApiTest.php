@@ -9,7 +9,8 @@ use Tests\Helpers\TestHelper;
 
 class LetterApiTest extends TestCase
 {
-
+    protected $seed = true;
+    use RefreshDatabase;
     public function test_create_letter_endpoint_with_no_token_and_return_401_unauthorized(): void
     {
         $body = [

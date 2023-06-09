@@ -8,9 +8,12 @@ use Tests\helpers\TestHelper;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
-{
+{   
+    protected $seed = true;
+    use RefreshDatabase;
     public function testLogin_endpoint_with_seeder_credentials()
     {
+
         $body = [
             'email' => 'teste@teste.com',
             'password' => '123456'
