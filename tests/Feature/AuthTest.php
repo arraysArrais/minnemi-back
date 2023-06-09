@@ -37,4 +37,18 @@ class AuthTest extends TestCase
 
         
     }
+
+    public function testLogout_endpoint(){
+        $token = $this->getJwtToken();
+
+        $headers = [
+            'Authorization' => 'Bearer ' . $token
+        ];
+
+        $response = $this->postJson('api/auth/logout', [], $headers);
+        $response->assertStatus(200);
+        $response->assertJson([
+            'message' => 'Successfully logged out'
+        ]);
+    }
 }
