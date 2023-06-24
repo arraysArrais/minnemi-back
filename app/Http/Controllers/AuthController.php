@@ -18,9 +18,50 @@ class AuthController extends Controller
     }
 
     /**
-     * Get a JWT via given credentials.
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Post(
+     *     path="/api/auth/login",
+     *     operationId="login",
+     *     tags={"auth"},
+     *     summary="get access-token",
+     *     description="JWT Token. Required for all requests.",
+     *     @OA\Parameter(
+     *         name="email",
+     *         in="query",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             example="teste@teste.com",
+     *         ),
+     *     ),
+     *     @OA\Parameter(
+     *         name="password",
+     *         in="query",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             example="123456",
+     *         ),
+     *         
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *         type="object",
+     *          @OA\Property(property="access-token", type="string", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."),
+     *          @OA\Property(property="token_type", type="string", example="bearer"),
+     *          @OA\Property(property="expires_in", type="int", example="3600"),
+     *       ),
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Incorrect username or password", 
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error while fetching data in database"
+     *     ),
+     * ),
      */
     public function login()
     {
