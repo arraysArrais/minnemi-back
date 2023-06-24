@@ -19,7 +19,7 @@ class DraftController extends Controller
             $draft = $this->draftService->insertDraft($r);
 
             if ($draft) {
-                return response()->json($draft);
+                return response()->json($draft, 201);
             }
         } catch (Throwable $e) {
             return response()->json([
