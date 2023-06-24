@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Http\Services;
 
@@ -7,7 +7,6 @@ use App\Models\Draft;
 
 class DraftService{
     public function insertDraft(DraftRequest $r){
-        $draft = Draft::create($r->toArray());
-        return $draft;
+        return Draft::create($r->toArray());
     }
 }
