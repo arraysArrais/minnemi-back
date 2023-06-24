@@ -24,25 +24,14 @@ class AuthController extends Controller
      *     tags={"auth"},
      *     summary="get access-token",
      *     description="JWT Token. Required for all requests.",
-     *     @OA\Parameter(
-     *         name="email",
-     *         in="query",
+     *     @OA\RequestBody(
      *         required=true,
-     *         @OA\Schema(
-     *             type="string",
-     *             example="teste@teste.com",
-     *         ),
-     *     ),
-     *     @OA\Parameter(
-     *         name="password",
-     *         in="query",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="string",
-     *             example="123456",
-     *         ),
-     *         
-     *     ),
+     *         @OA\JsonContent(
+     *      type="object",
+     *      @OA\Property(property="email", type="string", example="joaopedroarrais@gmail.com"),
+     *      @OA\Property(property="password", type="string", example="123456"),
+     *   ),
+     * ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -55,7 +44,11 @@ class AuthController extends Controller
      *     ),
      *     @OA\Response(
      *         response=403,
-     *         description="Incorrect username or password", 
+     *         description="Incorrect username or password",
+     *     @OA\JsonContent(
+     *        type="object",
+     *         @OA\Property(property="error", type="string", example="Unauthorized"),
+     *      ),
      *     ),
      *     @OA\Response(
      *         response=500,
