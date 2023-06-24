@@ -22,10 +22,9 @@ class DraftRequest extends FormRequest
     public function rules(): array
     {
         return [
-            '*' => 'required',
-            'title' => 'max:255',
-            'content' => 'max:65000',
-            'user_id' => 'exists:users,id'
+            'title' => 'required|max:255',
+            'content' => 'required|min:3|max:65000',
+            'user_id' => 'required|exists:users,id'
         ];
     }
 }
