@@ -24,11 +24,12 @@ class LetterRequest extends FormRequest
     {
         return [
             '*' => 'required',
-            'title' => 'min:3|max:32',
-            'content' => 'min:100|max:1200',
+            'title' => 'min:3|max:255',
+            'content' => 'min:100|max:65000',
             'email' => 'exists:credentials,email',
             'date_to_send' => ['date_format:Y-m-d'],
-            'visibility_id' => 'exists:visibility_types,id'
+            'visibility_id' => 'exists:visibility_types,id',
+            'user_id' => 'exists:users,id'
         ];
     }
 }

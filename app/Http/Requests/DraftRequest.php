@@ -23,6 +23,9 @@ class DraftRequest extends FormRequest
     {
         return [
             '*' => 'required',
+            'title' => 'max:255',
+            'content' => 'max:65000',
+            'user_id' => 'exists:users,id'
         ];
     }
 }
