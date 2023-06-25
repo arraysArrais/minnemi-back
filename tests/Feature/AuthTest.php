@@ -11,7 +11,7 @@ class AuthTest extends TestCase
 {   
     protected $seed = true;
     use RefreshDatabase;
-    public function testLogin_endpoint_with_seeder_credentials()
+    public function test_request_to_login_endpoint_with_seeder_credentials_should_return_token()
     {
 
         $body = [
@@ -28,7 +28,7 @@ class AuthTest extends TestCase
         ]);
     }
 
-    public function testLogin_endpoint_with_wrong_credentials()
+    public function test_request_to_login_endpoint_with_wrong_credentials_should_return_401()
     {
         $body = [
             'email' => 'teste@teste.com',
@@ -39,7 +39,7 @@ class AuthTest extends TestCase
         $response->assertStatus(401);
     }
 
-    public function testLogout_endpoint(){
+    public function test_request_to_logout_endpoint_should_return_200(){
 
         $token = TestHelper::getJwtToken();
 

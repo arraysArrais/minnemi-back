@@ -11,7 +11,7 @@ class DraftApiTest extends TestCase
 {
     protected $seed = true;
     use RefreshDatabase;
-    public function test_create_draft_endpoint_with_no_token_and_return_401_unauthorized(): void
+    public function test_request_to_create_draft_endpoint_with_no_token_should_return_401_unauthorized(): void
     {
         $body = [
             'title' => 'Letter #02',
@@ -28,7 +28,7 @@ class DraftApiTest extends TestCase
         $response->assertStatus(401);
     }
 
-    public function test_create_draft_endpoint_with_token_and_return_201_created(): void
+    public function test_request_to_create_draft_endpoint_with_token_should_return_201_created(): void
     {
         $body = [
             'title' => 'Letter #02',
