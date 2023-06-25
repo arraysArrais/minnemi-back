@@ -18,10 +18,19 @@ class DraftController extends Controller
      * @OA\Post(
      *     path="/api/draft/",
      *     security={{"bearerAuth": {}}},
-     *     operationId="create",
+     *     operationId="createDraft",
      *     tags={"Draft"},
      *     summary="create a draft record in the database",
-     *     
+     *     @OA\Parameter(
+     *         name="lang",
+     *         in="header",
+     *         description="The language of validation messages sent in responses. If no value is provided, it will use 'en' by default.",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string",
+     *             enum={"en", "pt"}
+     *         )
+     *     ),
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
