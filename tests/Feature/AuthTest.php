@@ -28,6 +28,17 @@ class AuthTest extends TestCase
         ]);
     }
 
+    public function testLogin_endpoint_with_wrong_credentials()
+    {
+        $body = [
+            'email' => 'teste@teste.com',
+            'password' => '1234567'
+        ];
+
+        $response = $this->postJson('/api/auth/login', $body);
+        $response->assertStatus(401);
+    }
+
     public function testLogout_endpoint(){
 
         $token = TestHelper::getJwtToken();
