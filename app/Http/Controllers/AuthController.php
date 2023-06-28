@@ -18,9 +18,43 @@ class AuthController extends Controller
     }
 
     /**
-     * Get a JWT via given credentials.
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Post(
+     *     path="/api/auth/login",
+     *     operationId="login",
+     *     tags={"auth"},
+     *     summary="get access-token",
+     *     description="JWT Token. Required for all requests.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *      type="object",
+     *      @OA\Property(property="email", type="string", example="teste@teste.com"),
+     *      @OA\Property(property="password", type="string", example="123456"),
+     *   ),
+     * ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *         type="object",
+     *          @OA\Property(property="access-token", type="string", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."),
+     *          @OA\Property(property="token_type", type="string", example="bearer"),
+     *          @OA\Property(property="expires_in", type="int", example="3600"),
+     *       ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Incorrect username or password",
+     *     @OA\JsonContent(
+     *        type="object",
+     *         @OA\Property(property="error", type="string", example="Unauthorized"),
+     *      ),
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error while fetching data in database"
+     *     ),
+     * ),
      */
     public function login()
     {
@@ -46,9 +80,34 @@ class AuthController extends Controller
     }
 
     /**
-     * Log the user out (Invalidate the token).
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Post(
+     *     path="/api/auth/logout",
+     *     operationId="logout",
+     *     security={{"bearerAuth": {}}},
+     *     tags={"auth"},
+     *     summary="logout",
+     *     description="Logout endpoint",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *         type="object",
+     *          @OA\Property(property="message", type="string", example="Successfully logged out"),
+     *       ),
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Incorrect token",
+     *     @OA\JsonContent(
+     *        type="object",
+     *         @OA\Property(property="error", type="string", example="Unauthorized."),
+     *      ),
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error while fetching data in database"
+     *     ),
+     * ),
      */
     public function logout()
     {

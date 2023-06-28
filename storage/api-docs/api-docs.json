@@ -1,0 +1,385 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Minnemi API",
+        "description": "Documentação das APIs para interação com a aplicação Minnemi",
+        "license": {
+            "name": "Apache 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "get access-token",
+                "description": "JWT Token. Required for all requests.",
+                "operationId": "login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "teste@teste.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access-token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "bearer"
+                                        },
+                                        "expires_in": {
+                                            "type": "integer",
+                                            "example": "3600"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Incorrect username or password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error while fetching data in database"
+                    }
+                }
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "logout",
+                "description": "Logout endpoint",
+                "operationId": "logout",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Successfully logged out"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Incorrect token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error while fetching data in database"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/draft/": {
+            "post": {
+                "tags": [
+                    "Draft"
+                ],
+                "summary": "create a draft record in the database",
+                "operationId": "createDraft",
+                "parameters": [
+                    {
+                        "name": "lang",
+                        "in": "header",
+                        "description": "The language of validation messages sent in responses. If no value is provided, it will use 'en' by default.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "en",
+                                "pt"
+                            ]
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Letter #02"
+                                    },
+                                    "content": {
+                                        "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tempus et est eget convallis. Nullam eu tempor est. Nullam congue nulla eu eros fermentum, dictum varius neque varius. Integer euismod augue sit amet justo aliquet, a dapibus nibh volutpat. Duis sodales, orci sit amet pretium rutrum, leo ligula vestibulum ante"
+                                    },
+                                    "user_id": {
+                                        "type": "number",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Letter #02"
+                                        },
+                                        "content": {
+                                            "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tempus et est eget convallis. Nullam eu tempor est. Nullam congue nulla eu eros fermentum, dictum varius neque varius. Integer euismod augue sit amet justo aliquet, a dapibus nibh volutpat. Duis sodales, orci sit amet pretium rutrum, leo ligula vestibulum ante"
+                                        },
+                                        "user_id": {
+                                            "type": "number",
+                                            "example": 1
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "example": "2023-06-25T17:56:59.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "example": "2023-06-25T17:56:59.000000Z"
+                                        },
+                                        "id": {
+                                            "type": "number",
+                                            "example": 2
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unathenticated"
+                    },
+                    "422": {
+                        "description": "Invalid data"
+                    },
+                    "500": {
+                        "description": "Error while fetching data in database"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/letter/": {
+            "post": {
+                "tags": [
+                    "Letter"
+                ],
+                "summary": "create a Letter record in the database",
+                "operationId": "createLetter",
+                "parameters": [
+                    {
+                        "name": "lang",
+                        "in": "header",
+                        "description": "The language of validation messages sent in responses. If no value is provided, it will use 'en' by default.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "en",
+                                "pt"
+                            ]
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Letter #02"
+                                    },
+                                    "content": {
+                                        "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tempus et est eget convallis. Nullam eu tempor est. Nullam congue nulla eu eros fermentum, dictum varius neque varius. Integer euismod augue sit amet justo aliquet, a dapibus nibh volutpat. Duis sodales, orci sit amet pretium rutrum, leo ligula vestibulum ante"
+                                    },
+                                    "date_to_send": {
+                                        "type": "string",
+                                        "example": "2025-06-04"
+                                    },
+                                    "received": {
+                                        "type": "number",
+                                        "example": 1
+                                    },
+                                    "read": {
+                                        "type": "number",
+                                        "example": 0
+                                    },
+                                    "recipient_email": {
+                                        "type": "string",
+                                        "example": "teste@teste.com"
+                                    },
+                                    "user_id": {
+                                        "type": "number",
+                                        "example": 1
+                                    },
+                                    "visibility_id": {
+                                        "type": "number",
+                                        "example": 2
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Letter #02"
+                                        },
+                                        "content": {
+                                            "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tempus et est eget convallis. Nullam eu tempor est. Nullam congue nulla eu eros fermentum, dictum varius neque varius. Integer euismod augue sit amet justo aliquet, a dapibus nibh volutpat. Duis sodales, orci sit amet pretium rutrum, leo ligula vestibulum ante"
+                                        },
+                                        "date_to_send": {
+                                            "type": "string",
+                                            "example": "2025-06-04"
+                                        },
+                                        "received": {
+                                            "type": "number",
+                                            "example": 1
+                                        },
+                                        "read": {
+                                            "type": "number",
+                                            "example": 0
+                                        },
+                                        "recipient_email": {
+                                            "type": "string",
+                                            "example": "teste@teste.com"
+                                        },
+                                        "user_id": {
+                                            "type": "number",
+                                            "example": 1
+                                        },
+                                        "visibility_id": {
+                                            "type": "number",
+                                            "example": 2
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "example": "2023-06-25T17:56:59.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "example": "2023-06-25T17:56:59.000000Z"
+                                        },
+                                        "id": {
+                                            "type": "number",
+                                            "example": 2
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unathenticated"
+                    },
+                    "422": {
+                        "description": "Invalid data"
+                    },
+                    "500": {
+                        "description": "Error while fetching data in database"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}
