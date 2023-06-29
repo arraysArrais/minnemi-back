@@ -175,6 +175,51 @@ class AuthController extends Controller
         return response()->json($payload, 200);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/auth/register",
+     *     operationId="register",
+     *     tags={"auth"},
+     *     summary="sign up",
+     *     description="Creates a user record with valid credentials in the database.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *      type="object",
+     *      @OA\Property(property="nickname", type="string", example="janedoe"),
+     *      @OA\Property(property="first_name", type="string", example="jane"),
+     *      @OA\Property(property="last_name", type="string", example="doe"),
+     *      @OA\Property(property="email", type="string", example="janedoe@test.com"),
+     *      @OA\Property(property="password", type="string", example="12345678"),
+     *   ),
+     * ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *         type="object",
+     *          @OA\Property(property="nickname", type="string", example="janedoe"),
+     *          @OA\Property(property="first_name", type="string", example="jane"),
+     *          @OA\Property(property="last_name", type="string", example="doe"),
+     *          @OA\Property(property="updated_at", type="string", example="2099-01-01T00:00:00.000000Z"),
+     *          @OA\Property(property="created_at", type="string", example="2099-01-01T00:00:00.000000Z"),
+     *          @OA\Property(property="id", type="int", example="1"),
+     *       ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *     @OA\JsonContent(
+     *        type="object",
+     *         @OA\Property(property="message", type="string", example="The nickname has already been taken"),
+     *      ),
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error while fetching data in database"
+     *     ),
+     * ),
+     */
     public function register(SignupRequest $r)
     {
         $user = User::create([
