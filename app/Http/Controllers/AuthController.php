@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SignupRequest;
+use App\Models\Credentials;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -14,7 +18,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
     /**
@@ -164,9 +168,27 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function getPayload(){
+    public function getPayload()
+    {
         $payload = auth()->payload();
 
         return response()->json($payload, 200);
+    }
+
+    public function register(SignupRequest $r)
+    {
+        $user = User::create([
+            'nickname' => $r->nickname,
+            'first_name' => $r->first_name,
+            'last_name' => $r->last_name,
+        ]);
+
+        Credentials::create([
+            'email' => $r->email,
+            'password' => Hash::make($r->password),
+            'user_id' => $user->id
+        ]);
+
+        return $user;
     }
 }
