@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SignupRequest;
+use App\Models\Credentials;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -14,7 +18,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
     /**
@@ -164,9 +168,72 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function getPayload(){
+    public function getPayload()
+    {
         $payload = auth()->payload();
 
         return response()->json($payload, 200);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/auth/register",
+     *     operationId="register",
+     *     tags={"auth"},
+     *     summary="sign up",
+     *     description="Creates a user record with valid credentials in the database.",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *      type="object",
+     *      @OA\Property(property="nickname", type="string", example="janedoe"),
+     *      @OA\Property(property="first_name", type="string", example="jane"),
+     *      @OA\Property(property="last_name", type="string", example="doe"),
+     *      @OA\Property(property="email", type="string", example="janedoe@test.com"),
+     *      @OA\Property(property="password", type="string", example="12345678"),
+     *   ),
+     * ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *         type="object",
+     *          @OA\Property(property="nickname", type="string", example="janedoe"),
+     *          @OA\Property(property="first_name", type="string", example="jane"),
+     *          @OA\Property(property="last_name", type="string", example="doe"),
+     *          @OA\Property(property="updated_at", type="string", example="2099-01-01T00:00:00.000000Z"),
+     *          @OA\Property(property="created_at", type="string", example="2099-01-01T00:00:00.000000Z"),
+     *          @OA\Property(property="id", type="int", example="1"),
+     *       ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *     @OA\JsonContent(
+     *        type="object",
+     *         @OA\Property(property="message", type="string", example="The nickname has already been taken"),
+     *      ),
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error while fetching data in database"
+     *     ),
+     * ),
+     */
+    public function register(SignupRequest $r)
+    {
+        $user = User::create([
+            'nickname' => $r->nickname,
+            'first_name' => $r->first_name,
+            'last_name' => $r->last_name,
+        ]);
+
+        Credentials::create([
+            'email' => $r->email,
+            'password' => Hash::make($r->password),
+            'user_id' => $user->id
+        ]);
+
+        return $user;
     }
 }
