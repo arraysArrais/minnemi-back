@@ -1,0 +1,57 @@
+runtime: php81
+service: minnemi
+
+runtime_config:
+  document_root: public
+
+handlers:
+- url: /(.*\.(gif|png|jpg|css|js))$
+  static_files: public/\1
+  upload: public/.*\.(gif|png|jpg|css|js)$
+
+- url: /.*
+  secure: always
+  redirect_http_response_code: 301
+  script: auto
+
+liveness_check:
+  path: "/liveness_check"
+  check_interval_sec: 30
+  timeout_sec: 4
+  failure_threshold: 2
+  success_threshold: 2
+
+readiness_check:
+  path: "/readiness_check"
+  check_interval_sec: 5
+  timeout_sec: 4
+  failure_threshold: 2
+  success_threshold: 2
+  app_start_timeout_sec: 300
+
+
+# automatic_scaling:
+#    min_num_instances: 1
+#    max_num_instances: 1
+
+#resources:
+#    cpu: 2
+#    memory_gb: 4
+#   disk_size_gb: 100
+
+env_variables:
+    APP_DEBUG: false
+    APP_ENV: production
+    APP_KEY: 
+    APP_NAME: "Minnemi"
+    APP_STORAGE_PATH: /tmp
+    APP_STORAGE: /tmp
+    VIEW_COMPILED_PATH: /tmp
+    SESSION_DRIVER: cookie
+
+    DB_CONNECTION: mysql
+    DB_HOST: 00.00.00.000
+    DB_PORT: 0000
+    DB_DATABASE: db_name
+    DB_USERNAME: db_user
+    DB_PASSWORD: db_pass
