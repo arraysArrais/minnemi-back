@@ -17,3 +17,11 @@ use Illuminate\Http\Request;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/liveness_check', function(){
+    return http_response_code(200);
+});
+
+Route::get('/readiness_check', function(){
+    return http_response_code(200);
+});
