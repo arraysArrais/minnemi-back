@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LetterRequest;
 use App\Http\Services\LetterService;
 use App\Models\Letter;
+use Carbon\Carbon;
 use Throwable;
+use Illuminate\Http\Request;
 
 class LetterController extends Controller
 {
@@ -14,7 +16,7 @@ class LetterController extends Controller
     {
     }
 
-        /**
+    /**
      * @OA\Post(
      *     path="/api/letter/",
      *     security={{"bearerAuth": {}}},
@@ -91,5 +93,10 @@ class LetterController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function dispatch(Request $r)
+    {
+        
     }
 }
