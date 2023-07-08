@@ -39,8 +39,8 @@ Route::group([
 
 //protected api routes
 Route::middleware(['auth:api', SetLocale::class])->group(function () {
-    Route::post('/letter', [LetterController::class, 'create']);
-    Route::post('/draft', [DraftController::class, 'create']);
-    Route::get('/dispatch', [LetterController::class, 'dispatch']);
 });
 
+Route::post('/letter', [LetterController::class, 'create']);
+Route::post('/draft', [DraftController::class, 'create']);
+Route::get('/dispatch', [LetterController::class, 'dispatch']);
