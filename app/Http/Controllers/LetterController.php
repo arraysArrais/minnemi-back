@@ -97,6 +97,14 @@ class LetterController extends Controller
 
     public function dispatch(Request $r)
     {
-        
+        try {
+            return response()->json($this->letterService->DispatchLetter(), 200);
+        } 
+        catch (Throwable $e) {
+            return response()->json([
+                'error' => 'Internal error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }
