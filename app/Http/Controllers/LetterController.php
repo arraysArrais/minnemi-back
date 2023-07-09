@@ -92,6 +92,27 @@ class LetterController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/dispatch/",
+     *     security={{"bearerAuth": {}}},
+     *     tags={"Letter"},
+     *     summary="return all letters to be dispatched in the current date",
+     *     operationId="dispatch",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *     ),
+     *      @OA\Response(
+     *         response=401,
+     *         description="Unathenticated", 
+     *     ),
+     *      @OA\Response(
+     *         response=500,
+     *         description="Error while fetching data in database"
+     *     ),
+     * )
+     */
     public function dispatch(){
             try{
                 return $this->letterService->RetrieveLettersToDispatch();
