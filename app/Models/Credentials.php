@@ -23,6 +23,7 @@ class Credentials extends Authenticatable implements JWTSubject
         'google_id',
         'email_verified_at',
         'user_id',
+        'role'
     ];
 
     /**
