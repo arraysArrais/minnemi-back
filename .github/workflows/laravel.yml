@@ -24,6 +24,8 @@ jobs:
       run: php artisan jwt:secret
     - name: Directory Permissions
       run: chmod -R 777 storage bootstrap/cache
+    - name: Generate Swagger JSON
+      run: php artisan l5-swagger:generate
     - name: Create Database
       run: |
         mkdir -p database
