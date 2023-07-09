@@ -12,6 +12,6 @@ class LetterService{
     }
 
     public function RetrieveLettersToDispatch(){
-        return Letter::all()->where('date_to_send', Carbon::now());
+        return Letter::all()->where('date_to_send', Carbon::now()->format('Y-m-d'));
     }
 }
