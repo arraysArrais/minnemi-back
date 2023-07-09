@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LetterRequest;
 use App\Http\Services\LetterService;
 use App\Models\Letter;
+use Carbon\Carbon;
 use Throwable;
 
 class LetterController extends Controller
@@ -92,4 +93,20 @@ class LetterController extends Controller
             ], 500);
         }
     }
+
+    public function dispatch(){
+            $letters = Letter::all()->where('date_to_send', Carbon::now());
+            try{
+
+            }
+            catch(Throwable $e){
+                return response()->json([
+                    'error' => 'Internal error',
+                    'message' => $e->getMessage()
+                ], 500);
+            }
+             
+    }
 }
+
+   
