@@ -41,5 +41,5 @@ Route::group([
 Route::middleware(['auth:api', SetLocale::class])->group(function () {
     Route::post('/letter', [LetterController::class, 'create']);
     Route::post('/draft', [DraftController::class, 'create']);
-    Route::get('/dispatch', [LetterController::class, 'dispatch']);
+    Route::get('/dispatch', [LetterController::class, 'dispatch'])->middleware('auth.role');
 });
