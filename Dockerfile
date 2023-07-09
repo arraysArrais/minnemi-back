@@ -1,49 +1,93 @@
-# Imagem base
-FROM php:8.1-apache
+# syntax = docker/dockerfile:experimental
 
-# Atualiza repositórios, instala dependências e limpa pacotes baixados
-RUN apt-get update \
-    && apt-get -y install curl git zip zlib1g-dev libzip-dev \
-    && apt-get clean
+# Default to PHP 8.2, but we attempt to match
+# the PHP version from the user (wherever `flyctl launch` is run)
+# Valid version values are PHP 7.4+
+ARG PHP_VERSION=8.2
+ARG NODE_VERSION=18
+FROM fideloper/fly-laravel:${PHP_VERSION} as base
 
-# Instala extensões PHP necessárias
-RUN docker-php-ext-install mysqli pdo_mysql zip
+# PHP_VERSION needs to be repeated here
+# See https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
+ARG PHP_VERSION
 
-# Copia os arquivos do aplicativo
+LABEL fly_launch_runtime="laravel"
+
+# copy application code, skipping files based on .dockerignore
 COPY . /var/www/html
 
-# Copia o composer.json e o composer.lock para o diretório /var/www/html no contêiner
-COPY composer.json composer.lock /var/www/html/
+RUN composer install --optimize-autoloader --no-dev \
+    && mkdir -p storage/logs \
+    && php artisan optimize:clear \
+    && chown -R www-data:www-data /var/www/html \
+    && sed -i 's/protected \$proxies/protected \$proxies = "*"/g' app/Http/Middleware/TrustProxies.php \
+    && echo "MAILTO=\"\"\n* * * * * www-data /usr/bin/php /var/www/html/artisan schedule:run" > /etc/cron.d/laravel \
+    && cp .fly/entrypoint.sh /entrypoint \
+    && chmod +x /entrypoint
 
-# Define o diretório de trabalho como /var/www/html
-WORKDIR /var/www/html
+# If we're using Octane...
+RUN if grep -Fq "laravel/octane" /var/www/html/composer.json; then \
+        rm -rf /etc/supervisor/conf.d/fpm.conf; \
+        if grep -Fq "spiral/roadrunner" /var/www/html/composer.json; then \
+            mv /etc/supervisor/octane-rr.conf /etc/supervisor/conf.d/octane-rr.conf; \
+            if [ -f ./vendor/bin/rr ]; then ./vendor/bin/rr get-binary; fi; \
+            rm -f .rr.yaml; \
+        else \
+            mv .fly/octane-swoole /etc/services.d/octane; \
+            mv /etc/supervisor/octane-swoole.conf /etc/supervisor/conf.d/octane-swoole.conf; \
+        fi; \
+        rm /etc/nginx/sites-enabled/default; \
+        ln -sf /etc/nginx/sites-available/default-octane /etc/nginx/sites-enabled/default; \
+    fi
 
-# Instala as dependências do Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer install --optimize-autoloader --no-scripts
+# Multi-stage build: Build static assets
+# This allows us to not include Node within the final container
+FROM node:${NODE_VERSION} as node_modules_go_brrr
 
-# Variável de ambiente para o diretório raiz do Apache
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+RUN mkdir /app
 
-# Atualiza configurações do Apache para usar o diretório raiz especificado
-RUN sed -i "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/sites-available/000-default.conf
-RUN sed -i "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/sites-available/default-ssl.conf
+RUN mkdir -p  /app
+WORKDIR /app
+COPY . .
+COPY --from=base /var/www/html/vendor /app/vendor
 
-# Volume para armazenar logs fora do contêiner
-VOLUME ["/var/www/html/storage/logs"]
+# Use yarn or npm depending on what type of
+# lock file we might find. Defaults to
+# NPM if no lock file is found.
+# Note: We run "production" for Mix and "build" for Vite
+RUN if [ -f "vite.config.js" ]; then \
+        ASSET_CMD="build"; \
+    else \
+        ASSET_CMD="production"; \
+    fi; \
+    if [ -f "yarn.lock" ]; then \
+        yarn install --frozen-lockfile; \
+        yarn $ASSET_CMD; \
+    elif [ -f "pnpm-lock.yaml" ]; then \
+        corepack enable && corepack prepare pnpm@latest-7 --activate; \
+        pnpm install --frozen-lockfile; \
+        pnpm run $ASSET_CMD; \
+    elif [ -f "package-lock.json" ]; then \
+        npm ci --no-audit; \
+        npm run $ASSET_CMD; \
+    else \
+        npm install; \
+        npm run $ASSET_CMD; \
+    fi;
 
-# Executa os comandos Artisan e ajustes de permissões
-RUN php artisan cache:clear && \
-    php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan key:generate
+# From our base container created above, we
+# create our final image, adding in static
+# assets that we generated above
+FROM base
 
-# Define permissões de escrita para o diretório de armazenamento
-RUN chmod -R 777 storage
-RUN chown -R www-data:www-data storage
+# Packages like Laravel Nova may have added assets to the public directory
+# or maybe some custom assets were added manually! Either way, we merge
+# in the assets we generated above rather than overwrite them
+COPY --from=node_modules_go_brrr /app/public /var/www/html/public-npm
+RUN rsync -ar /var/www/html/public-npm/ /var/www/html/public/ \
+    && rm -rf /var/www/html/public-npm \
+    && chown -R www-data:www-data /var/www/html/public
 
-# Habilita o módulo rewrite do Apache
-RUN a2enmod rewrite
+EXPOSE 8080
 
-# Expõe a porta 80
-EXPOSE 80
+ENTRYPOINT ["/entrypoint"]
