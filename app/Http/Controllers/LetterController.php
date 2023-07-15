@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LetterRequest;
 use App\Http\Services\LetterService;
+use App\Http\Services\MailService;
 use App\Models\Letter;
 use Throwable;
 
 class LetterController extends Controller
 {
 
-    public function __construct(private LetterService $letterService)
+    public function __construct(private LetterService $letterService, private MailService $mailService)
     {
     }
 
@@ -86,6 +87,18 @@ class LetterController extends Controller
                 return response()->json($letter, 201);
             }
         } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'Internal error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function sendMail(){
+        try{
+            $this->mailService->sendMail();
+        }
+        catch (Throwable $e) {
             return response()->json([
                 'error' => 'Internal error',
                 'message' => $e->getMessage()
