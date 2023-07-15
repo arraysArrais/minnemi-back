@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Letter;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,21 +14,18 @@ class LetterMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     */
-    public function __construct()
+    public function __construct(public Letter $letter)
     {
-        //
+        
     }
 
-    /**
-     * Get the message envelope.
-     */
+    // /**
+    //  * Get the message envelope.
+    //  */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Letter Mail',
+            subject: $this->letter['title'],
         );
     }
 
@@ -37,7 +35,7 @@ class LetterMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'LetterMail',
         );
     }
 
