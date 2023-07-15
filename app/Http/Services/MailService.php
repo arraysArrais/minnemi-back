@@ -9,11 +9,16 @@ use Illuminate\Support\Facades\Mail;
 
 class MailService{
     public function SendMail(){
+        $response = [];
+
         $letters = $this->RetrieveLettersToDispatch();
 
         foreach($letters as $letter){
             Mail::to($letter->recipient_email)->send(new LetterMail($letter));
+            array_push($response, $letter->recipient_email);
         }
+
+        return $response;
     }
 
     public function RetrieveLettersToDispatch(){

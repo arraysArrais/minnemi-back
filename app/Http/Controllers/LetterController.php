@@ -96,7 +96,8 @@ class LetterController extends Controller
 
     public function sendMail(){
         try{
-            $this->mailService->sendMail();
+            $response = $this->mailService->sendMail();
+            return response()->json(['sent to:'=>$response]);
         }
         catch (Throwable $e) {
             return response()->json([
