@@ -18,6 +18,7 @@ class Letter extends Model
         'date_to_send',
         'received',
         'read',
+        'sent',
         'recipient_email',
         'user_id',
         'visibility_id'
