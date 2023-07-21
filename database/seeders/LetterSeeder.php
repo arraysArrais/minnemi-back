@@ -17,7 +17,7 @@ class LetterSeeder extends Seeder
         Letter::create([
             'title' => 'Letter #01',
             'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tempus et est eget convallis. Nullam eu tempor est. Nullam congue nulla eu eros fermentum, dictum varius neque varius. Integer euismod augue sit amet justo aliquet, a dapibus nibh volutpat. Duis sodales, orci sit amet pretium rutrum, leo ligula vestibulum ante',
-            'date_to_send' => Carbon::now(),
+            'date_to_send' => Carbon::now()->format('Y-m-d'),
             'received' => 1,
             'read' => 0,
             'recipient_email' => 'johndoe@loremipsum.com',
@@ -28,7 +28,7 @@ class LetterSeeder extends Seeder
         Letter::create([
             'title' => 'Letter #02',
             'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tempus et est eget convallis. Nullam eu tempor est. Nullam congue nulla eu eros fermentum, dictum varius neque varius. Integer euismod augue sit amet justo aliquet, a dapibus nibh volutpat. Duis sodales, orci sit amet pretium rutrum, leo ligula vestibulum ante',
-            'date_to_send' => Carbon::now(),
+            'date_to_send' => Carbon::now()->format('Y-m-d'),
             'received' => 1,
             'read' => 0,
             'recipient_email' => 'johndoe@loremipsum.com',
