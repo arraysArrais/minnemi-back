@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('date_to_send');
             $table->integer('received')->default(0);
             $table->integer('read')->default(0);
+            $table->boolean('sent')->default(false);
             $table->string('recipient_email');
             $table->foreignIdFor(User::class)->references('id')->on('users')->onDelete('CASCADE');
             $table->timestamps();
