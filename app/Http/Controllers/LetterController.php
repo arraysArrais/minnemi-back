@@ -94,10 +94,15 @@ class LetterController extends Controller
         }
     }
 
+
     public function sendMail(){
         try{
             $response = $this->mailService->sendMail();
-            return response()->json(['sent to:'=>$response]);
+            if($response){
+                return response()->json(['sent to:'=>$response]);
+            }
+            return response()->json(['message'=>'No letters to dispatch']);
+
         }
         catch (Throwable $e) {
             return response()->json([
