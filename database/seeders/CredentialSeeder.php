@@ -18,7 +18,8 @@ class CredentialSeeder extends Seeder
             'password' => Hash::Make('123456'), 
             'email' => 'teste@teste.com', 
             'user_id' => 1, 
-            'google_id' => 1]
+            'google_id' => 1,
+            'role'=>'admin']
         );
     }
 }

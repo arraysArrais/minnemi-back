@@ -4,17 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LetterRequest;
 use App\Http\Services\LetterService;
+use App\Http\Services\MailService;
 use App\Models\Letter;
 use Throwable;
 
 class LetterController extends Controller
 {
 
-    public function __construct(private LetterService $letterService)
+    public function __construct(private LetterService $letterService, private MailService $mailService)
     {
     }
 
-        /**
+    /**
      * @OA\Post(
      *     path="/api/letter/",
      *     security={{"bearerAuth": {}}},
@@ -85,6 +86,43 @@ class LetterController extends Controller
             if ($letter) {
                 return response()->json($letter, 201);
             }
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => 'Internal error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/sendMail/",
+     *     security={{"bearerAuth": {}}},
+     *     operationId="sendMail",
+     *     tags={"Mail"},
+     *     summary="Manually dispatch letters. The user sending the request must be an admin.",
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated", 
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Letters sent successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error while fetching data in the database"
+     *     )
+     * )
+     */
+    public function sendMail()
+    {
+        try {
+            $response = $this->mailService->sendMail();
+            if ($response) {
+                return response()->json(['sent to:' => $response]);
+            }
+            return response()->json(['message' => 'No letters to dispatch']);
         } catch (Throwable $e) {
             return response()->json([
                 'error' => 'Internal error',

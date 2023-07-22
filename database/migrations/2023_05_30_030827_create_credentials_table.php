@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email', 45)->unique()->nullable(false);
             $table->string('google_id', 45)->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('role', 5)->default('user')->nullable(false);
             $table->rememberToken();
             $table->foreignIdFor(User::class)->references('id')->on('users')->onDelete('CASCADE');
             $table->timestamps();
