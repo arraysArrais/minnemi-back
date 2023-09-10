@@ -37,6 +37,7 @@ Route::group([
     Route::post('register', [AuthController::class, 'register']);
 });
 
+
 //protected api routes
 Route::middleware(['auth:api', SetLocale::class])->group(function () {
     Route::post('/letter', [LetterController::class, 'create']);
